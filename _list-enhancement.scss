@@ -7,7 +7,7 @@
 }
 
 // the first item in sass list is number 1
-@function slice($list, $start, $end) {
+@function slice($list, $start, $end: -1) {
 	$temp-list: ();
 	$len: length($list);
 
@@ -94,4 +94,44 @@
 @function remove-nth($list, $nth) {
 	$value: nth($list, $nth);
 	@return remove($list, $value);
+}
+
+@function pop($list) {
+	@return remove-nth($list, length($list));
+}
+
+@function contains($list, $value) {
+	@return index($list, $value) != null;
+}
+
+@function reverse($list) {
+	$len: length($list);
+	$i: $len;
+
+	$ret: ();
+
+	@while $i > 0 {
+		$ret: append($ret, nth($list, $i));
+		$i: $i - 1;
+	}
+
+	@return $ret;
+
+}
+
+@function insert-nth($list, $nth, $value) {
+	@if type-of($nth) != "number" {
+		@error "$nth: #{quote($nth)} is not a number for insert-nth"
+	} @else {
+		$ret: ();
+
+		@for $i from 1 through length($list) {
+			@if $i == $nth {
+				$ret: append($ret, $value);
+			}
+			$ret: append($ret, nth($list, $i));
+		}
+
+		@return $ret;
+	}
 }
